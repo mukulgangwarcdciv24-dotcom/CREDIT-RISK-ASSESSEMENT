@@ -1,242 +1,233 @@
-Build a professional full-stack Credit Risk Assessment Dashboard based on my machine learning project.
+# Credit Risk Assessment Using Ensemble Learning
 
-The backend model already exists in Python and predicts loan default probability using ensemble learning models (Bagging, Random Forest, Gradient Boosting, XGBoost, etc.).
+## Overview
 
-I need only the frontend UI and API integration layer.
+This project builds an end-to-end Credit Risk Assessment System that predicts the probability of loan default using multiple machine learning models.
 
-========================================================
-PROJECT GOAL
-========================================================
+Beyond binary classification, the system generates:
 
-Create a modern fintech-style web application where a loan officer can:
-
-1. Enter borrower information.
-2. Submit the application.
-3. Receive:
-   - Default Probability
-   - Risk Score (0-100)
-   - Risk Category (Low / Medium / High)
-4. View explanation of risk factors.
-5. View portfolio-level analytics.
-
-The design should look like a professional banking or fintech platform.
-
-========================================================
-TECH STACK
-========================================================
-
-Frontend:
-- React
-- TypeScript
-- Tailwind CSS
-- Shadcn UI
-- Recharts
-
-Backend API:
-- FastAPI (assume API already exists)
-
-========================================================
-APP STRUCTURE
-========================================================
-
-Create the following pages:
-
---------------------------------------------------------
-1. Dashboard
---------------------------------------------------------
-
-Top KPI cards:
-
-- Total Applications
-- Average Risk Score
-- High Risk Borrowers
-- Default Rate
-
-Charts:
-
-- Risk Category Distribution
-- Loan Purpose Distribution
-- Default Probability Histogram
-- ROC-AUC Model Comparison
-
-Recent Applications Table:
-
-Columns:
-- Borrower ID
-- Risk Score
 - Default Probability
-- Risk Category
-- Status
+- Risk Score (0–100)
+- Risk Category (Low / Medium / High Risk)
 
---------------------------------------------------------
-2. Credit Risk Prediction Page
---------------------------------------------------------
+The project combines predictive modeling with explainability through SHAP (SHapley Additive Explanations), making the results suitable for practical credit-risk analysis and lending decision support.
 
-Loan Application Form
+---
 
-Fields:
+## Business Problem
 
-- Credit Policy
-- Purpose
+Financial institutions face significant losses due to borrower defaults.
+
+The objective of this project is to:
+
+- Predict whether a borrower is likely to default.
+- Identify key factors influencing default risk.
+- Create an interpretable risk-scoring framework.
+- Assist lenders in portfolio monitoring and risk-based decision making.
+
+---
+
+## Dataset
+
+The dataset contains borrower-level credit information including:
+
+- Credit Policy Status
+- Loan Purpose
 - Interest Rate
-- Installment
-- Log Annual Income
-- Debt To Income Ratio
+- Installment Amount
+- Annual Income
+- Debt-to-Income Ratio (DTI)
 - FICO Score
-- Days With Credit Line
 - Revolving Balance
 - Revolving Utilization
-- Inquiries Last 6 Months
-- Delinquencies Last 2 Years
+- Recent Credit Inquiries
+- Delinquencies
 - Public Records
 
-Submit Button
+### Target Variable
 
-When submitted:
+`not.fully.paid`
 
-Call:
+- 0 → Loan Repaid
+- 1 → Loan Defaulted
 
-POST /predict
+Dataset Size:
 
-Response:
+- 9,578 observations
+- 14 features
 
-{
-  "default_probability": 0.42,
-  "risk_score": 42,
-  "risk_category": "Medium Risk"
-}
+Default Rate:
 
-Display results inside premium analytics cards.
+- Approximately 16%
 
---------------------------------------------------------
-3. Risk Analysis Page
---------------------------------------------------------
+---
 
-Show:
+## Project Workflow
 
-- Gauge Chart for Risk Score
-- Risk Category Indicator
-- Probability Meter
+### 1. Data Understanding
 
-Color Scheme:
+- Dataset inspection
+- Missing value analysis
+- Statistical summaries
+- Class distribution analysis
 
-Green = Low Risk
-Yellow = Medium Risk
-Red = High Risk
+### 2. Data Preprocessing
 
---------------------------------------------------------
-4. Explainability Page
---------------------------------------------------------
+- Label Encoding for categorical variables
+- Feature preparation
+- Train-Test Split (70/30 Stratified)
 
-Show SHAP-style explanations.
+### 3. Exploratory Data Analysis
 
-Display:
+Visualizations include:
 
-Top Contributing Features
+- FICO Score Distribution
+- Loan Purpose Analysis
+- Interest Rate vs FICO Relationship
+- Correlation Heatmap
 
-Example:
+### 4. Machine Learning Models
 
-Interest Rate      +0.22
-FICO Score         -0.18
-DTI                +0.12
-Income             -0.09
+The following models were trained and evaluated:
 
-Use:
+1. Decision Tree (Grid Search Tuned)
+2. Bagging Classifier
+3. AdaBoost
+4. Random Forest
+5. Gradient Boosting
+6. XGBoost
 
-- Horizontal bar charts
-- Feature impact cards
+---
 
---------------------------------------------------------
-5. Portfolio Analytics Page
---------------------------------------------------------
+## Evaluation Metrics
 
-Charts:
+Models were compared using:
 
-- Risk Category Distribution
-- Default Rate by Risk Category
-- Average Risk Score
-- Monthly Applications
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC-AUC
 
-Include:
+### Best Performing Model
 
-- Interactive filters
-- Search
-- Export CSV Button
+**Bagging Classifier**
 
-========================================================
-DESIGN REQUIREMENTS
-========================================================
+ROC-AUC: **0.6684**
 
-Theme:
+The Bagging model achieved the highest ROC-AUC score and demonstrated the strongest discriminative performance on the test dataset.
 
-Professional Banking Dashboard
+---
 
-Inspired by:
+## Explainability with SHAP
 
-- Bloomberg Terminal
-- JPMorgan Analytics
-- Goldman Sachs Internal Dashboards
-- Stripe Analytics
+Although Bagging delivered the best predictive performance, XGBoost was selected for explainability analysis because of its strong integration with SHAP.
 
-Color Palette:
+SHAP was used to:
 
-Primary:
-#0F172A
+- Understand feature impact
+- Explain individual predictions
+- Identify key risk drivers
 
-Secondary:
-#1E293B
+Key Risk Drivers:
 
-Accent:
-#3B82F6
+- Credit Policy Status
+- Interest Rate
+- Loan Purpose
+- FICO Score
+- Recent Credit Inquiries
+- Revolving Balance
+- Revolving Utilization
 
-Success:
-#22C55E
+---
 
-Warning:
-#F59E0B
+## Credit Risk Scoring System
 
-Danger:
-#EF4444
+The project converts predicted default probabilities into a business-friendly risk score.
 
-Design Requirements:
+### Risk Score Formula
 
-- Fully responsive
-- Mobile friendly
-- Dark mode
-- Smooth animations
-- Glassmorphism cards
-- Professional typography
-- Clean spacing
-- Enterprise-level appearance
+Risk Score = Default Probability × 100
 
-========================================================
-BONUS FEATURES
-========================================================
+### Risk Categories
 
-Add:
+| Risk Score | Category |
+|------------|----------|
+| 0 – 30 | Low Risk |
+| 31 – 70 | Medium Risk |
+| 71 – 100 | High Risk |
 
-- Sidebar navigation
-- User profile section
-- Notifications panel
-- Download PDF report button
-- Export prediction history
-- Loading skeletons
-- Error handling
-- Toast notifications
+This framework allows:
 
-========================================================
-DELIVERABLE
-========================================================
+- Portfolio Segmentation
+- Risk Monitoring
+- Lending Decision Support
+- Credit Policy Evaluation
 
-Generate complete React + TypeScript codebase.
+---
 
-Include:
+## Results Summary
 
-- Folder structure
-- Components
-- Pages
-- Mock API integration
-- Dummy data
-- Tailwind configuration
+| Model | ROC-AUC |
+|--------|----------|
+| Bagging | 0.6684 |
+| AdaBoost | 0.6604 |
+| Gradient Boosting | 0.6564 |
+| Random Forest | 0.6481 |
+| Decision Tree | 0.6459 |
+| XGBoost | 0.6282 |
 
-The final application should look like a production-grade credit risk assessment platform used by banks and financial institutions.
+Bagging achieved the best overall ROC-AUC score and was selected as the strongest predictive model.
+
+---
+
+## Technologies Used
+
+### Programming Language
+
+- Python
+
+### Libraries
+
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- Scikit-Learn
+- XGBoost
+- SHAP
+
+---
+
+## Business Insights
+
+The analysis reveals that:
+
+- Lower FICO scores are associated with higher default risk.
+- Higher interest rates indicate riskier borrowers.
+- Higher debt burden increases default probability.
+- Frequent credit inquiries may signal financial distress.
+- Income acts as a protective factor against default.
+
+These findings align with established credit-risk principles used across the banking and lending industry.
+
+---
+
+## Future Improvements
+
+Potential enhancements include:
+
+- LightGBM implementation
+- Hyperparameter optimization
+- Probability calibration
+- Expected Loss (EL) estimation
+- Probability of Default (PD) modeling
+- Portfolio-level credit risk analytics
+
+---
+
+## Conclusion
+
+This project demonstrates a complete machine learning workflow for credit risk assessment, combining predictive modeling, explainability, and risk scoring.
+
+The final solution provides both accurate default prediction and actionable business insights, making it suitable for real-world lending and risk-management applications.
